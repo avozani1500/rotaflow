@@ -1,0 +1,8 @@
+/config/database.local.php
+/tmp/
+/logs/
+/.idea/
+/.vscode/
+*.log
+Thumbs.db
+
