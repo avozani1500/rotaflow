@@ -66,8 +66,7 @@ CREATE TABLE frete (
     CONSTRAINT fk_frete_origem FOREIGN KEY (origem_id) REFERENCES endereco (id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_frete_destino FOREIGN KEY (destino_id) REFERENCES endereco (id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_frete_transportador FOREIGN KEY (transportador_id) REFERENCES transportador (id) ON UPDATE CASCADE ON DELETE RESTRICT,
-    CONSTRAINT chk_frete_status CHECK (status IN ('Em aberto', 'Em trânsito', 'Concluído', 'Cancelado')),
-    CONSTRAINT chk_frete_rota CHECK (origem_id <> destino_id)
+    CONSTRAINT chk_frete_status CHECK (status IN ('Em aberto', 'Em trânsito', 'Concluído', 'Cancelado'))
 ) ENGINE=InnoDB;
 
 CREATE TABLE frete_produto (
@@ -79,4 +78,24 @@ CREATE TABLE frete_produto (
     CONSTRAINT fk_frete_produto_produto FOREIGN KEY (produto_id) REFERENCES produto (id) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_frete_produto_quantidade CHECK (quantidade >= 1)
 ) ENGINE=InnoDB;
+
+DELIMITER //
+CREATE TRIGGER trg_frete_rota_insert
+BEFORE INSERT ON frete
+FOR EACH ROW
+BEGIN
+    IF NEW.origem_id = NEW.destino_id THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A origem e o destino do frete devem ser diferentes';
+    END IF;
+END//
+
+CREATE TRIGGER trg_frete_rota_update
+BEFORE UPDATE ON frete
+FOR EACH ROW
+BEGIN
+    IF NEW.origem_id = NEW.destino_id THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A origem e o destino do frete devem ser diferentes';
+    END IF;
+END//
+DELIMITER ;
 
