@@ -122,6 +122,15 @@ function date_br(?string $date): string
     return (new DateTimeImmutable($date))->format('d/m/Y');
 }
 
+function date_long_br(): string
+{
+    $days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+    $months = [1 => 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    $now = new DateTimeImmutable('today');
+
+    return mb_strtoupper($days[(int) $now->format('w')] . ', ' . $now->format('d') . ' DE ' . $months[(int) $now->format('n')] . ' DE ' . $now->format('Y'), 'UTF-8');
+}
+
 function normalize_decimal(mixed $value): float
 {
     $value = trim((string) $value);
