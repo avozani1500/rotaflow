@@ -53,12 +53,24 @@ final class ReportExportService
             $lines[] = 'Nenhum frete encontrado para os filtros informados.';
         }
 
-        $stream = "BT\n/F1 16 Tf\n40 800 Td\n" . $this->text($lines[0]) . " Tj\n/F1 9 Tf\n0 -22 Td\n";
-        foreach (array_slice($lines, 1) as $line) {
-            $stream .= $this->text($line) . " Tj\n0 -15 Td\n";
+        $wrappedLines = [];
+        foreach ($lines as $line) {
+            foreach (explode("\n", wordwrap($line, 96, "\n", true)) as $wrappedLine) {
+                $wrappedLines[] = $wrappedLine;
+            }
         }
-        $stream .= "ET\n";
-        $pdf = $this->buildPdf($stream);
+
+        $pageStreams = [];
+        foreach (array_chunk($wrappedLines, 48) as $pageLines) {
+            $stream = "BT\n/F1 16 Tf\n40 800 Td\n" . $this->text($pageLines[0]) . " Tj\n/F1 9 Tf\n0 -22 Td\n";
+            foreach (array_slice($pageLines, 1) as $line) {
+                $stream .= $this->text($line) . " Tj\n0 -15 Td\n";
+            }
+            $stream .= "ET\n";
+            $pageStreams[] = $stream;
+        }
+
+        $pdf = $this->buildPdf($pageStreams);
 
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="rotaflow-relatorio-' . date('Y-m-d') . '.pdf"');
@@ -72,20 +84,28 @@ final class ReportExportService
         return '(' . str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $value) . ')';
     }
 
-    private function buildPdf(string $stream): string
+    private function buildPdf(array $pageStreams): string
     {
         $objects = [
-            '<< /Type /Catalog /Pages 2 0 R >>',
-            '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-            '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
-            '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
-            '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "endstream",
+            1 => '<< /Type /Catalog /Pages 2 0 R >>',
+            3 => '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
         ];
+        $pageReferences = [];
+        foreach ($pageStreams as $index => $stream) {
+            $pageObject = 4 + ($index * 2);
+            $contentObject = $pageObject + 1;
+            $pageReferences[] = $pageObject . ' 0 R';
+            $objects[$pageObject] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ' . $contentObject . ' 0 R >>';
+            $objects[$contentObject] = '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "endstream";
+        }
+        $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', $pageReferences) . '] /Count ' . count($pageStreams) . ' >>';
+        ksort($objects);
+
         $pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
         $offsets = [0];
         foreach ($objects as $number => $object) {
-            $offsets[$number + 1] = strlen($pdf);
-            $pdf .= ($number + 1) . " 0 obj\n" . $object . "\nendobj\n";
+            $offsets[$number] = strlen($pdf);
+            $pdf .= $number . " 0 obj\n" . $object . "\nendobj\n";
         }
         $xref = strlen($pdf);
         $pdf .= "xref\n0 " . (count($objects) + 1) . "\n0000000000 65535 f \n";
