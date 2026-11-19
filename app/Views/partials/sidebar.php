@@ -13,8 +13,15 @@
         <a class="nav-link <?= e(active_route('reports')) ?>" href="<?= e(url('reports')) ?>"><i class="bi bi-bar-chart-line"></i> Relatórios</a>
     </nav>
     <div class="sidebar-bottom">
-        <div class="helper-card"><div class="helper-icon"><i class="bi bi-info-circle"></i></div><strong>Projeto acadêmico</strong><span>Interface baseada no protótipo da UNIPAR.</span></div>
-        <div class="side-profile"><div class="avatar">RF</div><div><strong>Operação local</strong><small>RotaFlow <?= e(APP_VERSION) ?></small></div></div>
+        <div class="helper-card">
+            <div class="helper-icon"><i class="bi bi-info-circle"></i></div>
+            <strong>Projeto acadêmico</strong>
+            <span>Interface baseada no protótipo da UNIPAR.</span>
+        </div>
+        <div class="side-profile">
+            <div class="avatar">RF</div>
+            <div><strong>Operação local</strong><small>RotaFlow <?= e(APP_VERSION) ?></small></div>
+        </div>
     </div>
 </aside>
 

@@ -1,8 +1,115 @@
-<?php $title = 'Endereços'; $freightCount = null; ?>
-<section class="page-heading"><div><p class="eyebrow">CADASTROS / ENDEREÇOS</p><h1>Endereços</h1><p class="subheading">Cadastre os locais de coleta e entrega dos produtos.</p></div><a class="btn btn-primary" href="#endereco-form"><i class="bi bi-plus-lg me-2"></i>Novo endereço</a></section>
-<div class="stat-strip"><span><i class="bi bi-geo-alt"></i> <strong><?= e(count($addresses)) ?> endereços</strong> cadastrados</span><span class="strip-separator"></span><span><i class="bi bi-signpost-split"></i> Utilize qualquer local como origem ou destino</span></div>
-<section class="catalog-layout"><div class="surface"><div class="section-head"><div><h2>Locais cadastrados</h2><p>Endereços disponíveis para as rotas</p></div><form class="searchbox" method="get"><input type="hidden" name="route" value="addresses"><i class="bi bi-search"></i><input name="q" value="<?= e($search) ?>" placeholder="Buscar endereço..." aria-label="Buscar endereço"></form></div><div class="entity-list">
-<?php foreach ($addresses as $address): ?><div class="entity-row"><span class="entity-marker"><i class="bi bi-geo-alt"></i></span><div class="entity-info"><strong><?= e($address['identificacao']) ?></strong><span><?= e($address['logradouro']) ?>, <?= e($address['numero']) ?><?= $address['complemento'] ? ', ' . e($address['complemento']) : '' ?> · <?= e($address['bairro']) ?> · <?= e($address['cidade']) ?>/<?= e($address['estado']) ?> · CEP <?= e($address['cep']) ?></span></div><span class="location-label"><?= e($address['estado']) ?></span><a class="edit-link" href="<?= e(url('addresses', ['edit' => $address['id']])) ?>#endereco-form">Editar</a><form method="post" action="<?= e(url('addresses/delete')) ?>" onsubmit="return confirm('Excluir este endereço? Fretes relacionados impedem a exclusão.');"><?= csrf_field() ?><input type="hidden" name="id" value="<?= e($address['id']) ?>"><button class="delete-link" type="submit"><i class="bi bi-trash"></i></button></form></div><?php endforeach; ?>
-<?php if (!$addresses): ?><p class="text-secondary text-center py-5 mb-0">Nenhum endereço encontrado.</p><?php endif; ?></div><div class="table-foot"><span>Exibindo <?= e(count($addresses)) ?> endereço(s)</span><span>Origem e destino</span></div></div>
-<div class="surface form-panel" id="endereco-form"><div class="section-head"><div><span class="form-kicker"><i class="bi bi-pencil-square"></i> FORMULÁRIO</span><h2><?= $edit ? 'Editar endereço' : 'Cadastrar endereço' ?></h2><p>Informe os dados do local.</p></div></div><form method="post" action="<?= e(url('addresses/save')) ?>" class="needs-validation" novalidate><?= csrf_field() ?><input type="hidden" name="id" value="<?= e($edit['id'] ?? '') ?>"><label>Identificação do local <span>*</span><input name="identificacao" required maxlength="150" value="<?= old('identificacao', $edit['identificacao'] ?? '') ?>" placeholder="Ex.: Centro de distribuição"><div class="invalid-feedback">Informe a identificação.</div></label><div class="field-grid"><label>CEP <span>*</span><input name="cep" required pattern="\d{5}-?\d{3}" value="<?= old('cep', $edit['cep'] ?? '') ?>" placeholder="00000-000"><div class="invalid-feedback">Informe um CEP válido.</div></label><label>Número <span>*</span><input name="numero" required value="<?= old('numero', $edit['numero'] ?? '') ?>" placeholder="123"><div class="invalid-feedback">Informe o número.</div></label></div><label>Logradouro <span>*</span><input name="logradouro" required value="<?= old('logradouro', $edit['logradouro'] ?? '') ?>" placeholder="Rua, avenida, rodovia..."></label><label>Complemento<input name="complemento" value="<?= old('complemento', $edit['complemento'] ?? '') ?>" placeholder="Bloco, sala, referência"></label><div class="field-grid"><label>Bairro <span>*</span><input name="bairro" required value="<?= old('bairro', $edit['bairro'] ?? '') ?>" placeholder="Bairro"></label><label>Cidade <span>*</span><input name="cidade" required value="<?= old('cidade', $edit['cidade'] ?? '') ?>" placeholder="Cidade"></label></div><label>UF <span>*</span><select name="estado" required><option value="">Selecione</option><?php foreach (['PR','SC','RS','SP','MS','MT','MG','RJ','BA','GO'] as $state): ?><option value="<?= e($state) ?>" <?= old('estado', $edit['estado'] ?? '') === $state ? 'selected' : '' ?>><?= e($state) ?></option><?php endforeach; ?></select></label><div class="form-actions"><a class="btn btn-light" href="<?= e(url('addresses')) ?>">Limpar</a><button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Salvar endereço</button></div></form></div></section>
+<?php
+$title = 'Endereços';
+$freightCount = null;
+?>
 
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">CADASTROS / ENDEREÇOS</p>
+        <h1>Endereços</h1>
+        <p class="subheading">Cadastre os locais de coleta e entrega dos produtos.</p>
+    </div>
+    <a class="btn btn-primary" href="#endereco-form"><i class="bi bi-plus-lg me-2"></i>Novo endereço</a>
+</section>
+
+<div class="stat-strip">
+    <span><i class="bi bi-geo-alt"></i> <strong><?= e(count($addresses)) ?> endereços</strong> cadastrados</span>
+    <span class="strip-separator"></span>
+    <span><i class="bi bi-signpost-split"></i> Utilize qualquer local como origem ou destino</span>
+</div>
+
+<section class="catalog-layout">
+    <div class="surface">
+        <div class="section-head">
+            <div>
+                <h2>Locais cadastrados</h2>
+                <p>Endereços disponíveis para as rotas</p>
+            </div>
+            <form class="searchbox" method="get">
+                <input type="hidden" name="route" value="addresses">
+                <i class="bi bi-search"></i>
+                <input name="q" value="<?= e($search) ?>" placeholder="Buscar endereço..." aria-label="Buscar endereço">
+            </form>
+        </div>
+        <div class="entity-list">
+            <?php foreach ($addresses as $address): ?>
+                <div class="entity-row">
+                    <span class="entity-marker"><i class="bi bi-geo-alt"></i></span>
+                    <div class="entity-info">
+                        <strong><?= e($address['identificacao']) ?></strong>
+                        <span>
+                            <?= e($address['logradouro']) ?>, <?= e($address['numero']) ?>
+                            <?= $address['complemento'] ? ', ' . e($address['complemento']) : '' ?>
+                            · <?= e($address['bairro']) ?> · <?= e($address['cidade']) ?>/<?= e($address['estado']) ?>
+                            · CEP <?= e($address['cep']) ?>
+                        </span>
+                    </div>
+                    <span class="location-label"><?= e($address['estado']) ?></span>
+                    <a class="edit-link" href="<?= e(url('addresses', ['edit' => $address['id']])) ?>#endereco-form">Editar</a>
+                    <form method="post" action="<?= e(url('addresses/delete')) ?>" onsubmit="return confirm('Excluir este endereço? Fretes relacionados impedem a exclusão.');">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= e($address['id']) ?>">
+                        <button class="delete-link" type="submit"><i class="bi bi-trash"></i></button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+            <?php if (!$addresses): ?>
+                <p class="text-secondary text-center py-5 mb-0">Nenhum endereço encontrado.</p>
+            <?php endif; ?>
+        </div>
+        <div class="table-foot">
+            <span>Exibindo <?= e(count($addresses)) ?> endereço(s)</span>
+            <span>Origem e destino</span>
+        </div>
+    </div>
+
+    <div class="surface form-panel" id="endereco-form">
+        <div class="section-head">
+            <div>
+                <span class="form-kicker"><i class="bi bi-pencil-square"></i> FORMULÁRIO</span>
+                <h2><?= $edit ? 'Editar endereço' : 'Cadastrar endereço' ?></h2>
+                <p>Informe os dados do local.</p>
+            </div>
+        </div>
+        <form method="post" action="<?= e(url('addresses/save')) ?>" class="needs-validation" novalidate>
+            <?= csrf_field() ?>
+            <input type="hidden" name="id" value="<?= e($edit['id'] ?? '') ?>">
+            <label>
+                Identificação do local <span>*</span>
+                <input name="identificacao" required maxlength="150" value="<?= old('identificacao', $edit['identificacao'] ?? '') ?>" placeholder="Ex.: Centro de distribuição">
+                <div class="invalid-feedback">Informe a identificação.</div>
+            </label>
+            <div class="field-grid">
+                <label>
+                    CEP <span>*</span>
+                    <input name="cep" required pattern="\d{5}-?\d{3}" value="<?= old('cep', $edit['cep'] ?? '') ?>" placeholder="00000-000">
+                    <div class="invalid-feedback">Informe um CEP válido.</div>
+                </label>
+                <label>
+                    Número <span>*</span>
+                    <input name="numero" required value="<?= old('numero', $edit['numero'] ?? '') ?>" placeholder="123">
+                    <div class="invalid-feedback">Informe o número.</div>
+                </label>
+            </div>
+            <label>Logradouro <span>*</span><input name="logradouro" required value="<?= old('logradouro', $edit['logradouro'] ?? '') ?>" placeholder="Rua, avenida, rodovia..."></label>
+            <label>Complemento<input name="complemento" value="<?= old('complemento', $edit['complemento'] ?? '') ?>" placeholder="Bloco, sala, referência"></label>
+            <div class="field-grid">
+                <label>Bairro <span>*</span><input name="bairro" required value="<?= old('bairro', $edit['bairro'] ?? '') ?>" placeholder="Bairro"></label>
+                <label>Cidade <span>*</span><input name="cidade" required value="<?= old('cidade', $edit['cidade'] ?? '') ?>" placeholder="Cidade"></label>
+            </div>
+            <label>
+                UF <span>*</span>
+                <select name="estado" required>
+                    <option value="">Selecione</option>
+                    <?php foreach (['PR', 'SC', 'RS', 'SP', 'MS', 'MT', 'MG', 'RJ', 'BA', 'GO'] as $state): ?>
+                        <option value="<?= e($state) ?>" <?= old('estado', $edit['estado'] ?? '') === $state ? 'selected' : '' ?>><?= e($state) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <div class="form-actions">
+                <a class="btn btn-light" href="<?= e(url('addresses')) ?>">Limpar</a>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Salvar endereço</button>
+            </div>
+        </form>
+    </div>
+</section>

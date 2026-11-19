@@ -1,7 +1,26 @@
-<?php $title = 'Fretes'; $freightCount = count($freights); ?>
+<?php
+$title = 'Fretes';
+$freightCount = count($freights);
+?>
 <section class="page-heading"><div><p class="eyebrow">OPERAÇÃO / FRETES</p><h1>Fretes</h1><p class="subheading">Consulte os transportes cadastrados e acompanhe suas cargas.</p></div><a class="btn btn-primary" href="<?= e(url('freights/create')) ?>"><i class="bi bi-plus-lg me-2"></i>Novo frete</a></section>
-<div class="surface report-filter compact-filter"><form class="filter-top" method="get"><input type="hidden" name="route" value="freights"><div><span class="form-kicker">FILTROS DE CONSULTA</span><h2>Fretes cadastrados</h2><p>Filtre os registros por período.</p></div><div class="filter-controls"><label>De<input type="date" name="from" value="<?= e($from) ?>"></label><label>Até<input type="date" name="to" value="<?= e($to) ?>"></label><button class="btn btn-primary" type="submit"><i class="bi bi-search me-2"></i>Consultar</button><a class="btn btn-light" href="<?= e(url('freights')) ?>">Limpar</a></div></form></div>
+<div class="surface report-filter compact-filter">
+    <form class="filter-top" method="get">
+        <input type="hidden" name="route" value="freights">
+        <div><span class="form-kicker">FILTROS DE CONSULTA</span><h2>Fretes cadastrados</h2><p>Filtre os registros por período.</p></div>
+        <div class="filter-controls"><label>De<input type="date" name="from" value="<?= e($from) ?>"></label><label>Até<input type="date" name="to" value="<?= e($to) ?>"></label><button class="btn btn-primary" type="submit"><i class="bi bi-search me-2"></i>Consultar</button><a class="btn btn-light" href="<?= e(url('freights')) ?>">Limpar</a></div>
+    </form>
+</div>
 <div class="surface report-table"><div class="section-head"><div><h2>Lista de fretes</h2><p><?= e(count($freights)) ?> registro(s) encontrado(s)</p></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>CÓDIGO</th><th>ROTA</th><th>TRANSPORTADOR</th><th>DATA</th><th>PRODUTOS</th><th>STATUS</th><th>AÇÃO</th></tr></thead><tbody>
-<?php foreach ($freights as $freight): ?><tr><td><a class="freight-code" href="<?= e(url('freights/show', ['id' => $freight['id']])) ?>">#FR-<?= e($freight['id']) ?></a></td><td><?= e($freight['origem_cidade']) ?>/<?= e($freight['origem_estado']) ?> → <?= e($freight['destino_cidade']) ?>/<?= e($freight['destino_estado']) ?></td><td><?= e($freight['transportador_nome']) ?></td><td><?= e(date_br($freight['data_frete'])) ?></td><td><?= e($freight['quantidade_total']) ?> un. / <?= e($freight['tipos_produto']) ?> tipo(s)</td><td><span class="status-pill <?= $freight['status'] === 'Em aberto' ? 'pending' : '' ?>"><?= e($freight['status']) ?></span></td><td><a class="edit-link" href="<?= e(url('freights/show', ['id' => $freight['id']])) ?>">Ver</a><a class="edit-link ms-2" href="<?= e(url('freights/create', ['edit' => $freight['id']])) ?>">Editar</a></td></tr><?php endforeach; ?>
+<?php foreach ($freights as $freight): ?>
+    <tr>
+        <td><a class="freight-code" href="<?= e(url('freights/show', ['id' => $freight['id']])) ?>">#FR-<?= e($freight['id']) ?></a></td>
+        <td><?= e($freight['origem_cidade']) ?>/<?= e($freight['origem_estado']) ?> → <?= e($freight['destino_cidade']) ?>/<?= e($freight['destino_estado']) ?></td>
+        <td><?= e($freight['transportador_nome']) ?></td>
+        <td><?= e(date_br($freight['data_frete'])) ?></td>
+        <td><?= e($freight['quantidade_total']) ?> un. / <?= e($freight['tipos_produto']) ?> tipo(s)</td>
+        <td><span class="status-pill <?= $freight['status'] === 'Em aberto' ? 'pending' : '' ?>"><?= e($freight['status']) ?></span></td>
+        <td><a class="edit-link" href="<?= e(url('freights/show', ['id' => $freight['id']])) ?>">Ver</a><a class="edit-link ms-2" href="<?= e(url('freights/create', ['edit' => $freight['id']])) ?>">Editar</a></td>
+    </tr>
+<?php endforeach; ?>
 <?php if (!$freights): ?><tr><td colspan="7" class="text-center py-5 text-secondary">Nenhum frete encontrado para os filtros informados.</td></tr><?php endif; ?></tbody></table></div></div>
 
