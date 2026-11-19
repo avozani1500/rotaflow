@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RotaFlow — Protótipo de Gerenciador Logístico</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-symbol"><i data-icon="route"></i></div><div><div class="brand-name">rota<span>flow</span></div><div class="brand-subtitle">GESTÃO LOGÍSTICA</div></div></div>
+    <div class="sidebar-label">ESPAÇO DE TRABALHO</div>
+    <nav class="nav-list" aria-label="Navegação principal">
+      <button class="nav-link active" data-screen="dashboard"><i data-icon="layout-dashboard"></i> Visão geral</button>
+      <button class="nav-link" data-screen="produtos"><i data-icon="package"></i> Produtos</button>
+      <button class="nav-link" data-screen="enderecos"><i data-icon="map-pin"></i> Endereços</button>
+      <button class="nav-link" data-screen="transportadores"><i data-icon="truck"></i> Transportadores</button>
+      <button class="nav-link" data-screen="fretes"><i data-icon="route"></i> Fretes <span class="nav-counter">4</span></button>
+      <button class="nav-link" data-screen="relatorios"><i data-icon="chart-bar"></i> Relatórios</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="helper-card"><div class="helper-icon"><i data-icon="info"></i></div><strong>Protótipo acadêmico</strong><span>Interface demonstrativa com dados fictícios.</span></div>
+      <div class="side-profile"><div class="avatar">RF</div><div><strong>Administrador</strong><small>Ambiente demonstrativo</small></div><i data-icon="chevrons-up-down"></i></div>
+    </div>
+  </aside>
+  <div class="main-area">
+    <header class="topbar"><div class="crumb"><span>RotaFlow</span><i data-icon="chevron-right"></i><strong id="page-crumb">Visão geral</strong></div><div class="top-actions"><span class="environment"><span class="pulse"></span> Ambiente de demonstração</span><div class="top-divider"></div><div class="user-avatar">AD</div></div></header>
+    <main class="main-content">
+      <section class="screen active" id="screen-dashboard">
+        <div class="page-heading"><div><p class="eyebrow">QUINTA-FEIRA, 12 DE NOVEMBRO DE 2026</p><h1>Visão geral</h1><p class="subheading">Acompanhe sua operação logística em um só lugar.</p></div><button class="btn primary" data-goto="fretes"><i data-icon="plus"></i> Criar novo frete</button></div>
+        <div class="metrics-grid">
+          <div class="metric-card"><div class="metric-top"><span>Fretes cadastrados</span><div class="metric-icon blue"><i data-icon="route"></i></div></div><div class="metric-number" id="metric-fretes">04</div><div class="metric-foot"><span class="foot-dot blue-dot"></span> Histórico da operação</div></div>
+          <div class="metric-card"><div class="metric-top"><span>Produtos</span><div class="metric-icon lilac"><i data-icon="package"></i></div></div><div class="metric-number" id="metric-products">05</div><div class="metric-foot"><span class="foot-dot purple-dot"></span> Disponíveis para fretes</div></div>
+          <div class="metric-card"><div class="metric-top"><span>Transportadores</span><div class="metric-icon amber"><i data-icon="truck"></i></div></div><div class="metric-number" id="metric-carriers">03</div><div class="metric-foot"><span class="foot-dot orange-dot"></span> Cadastrados no sistema</div></div>
+          <div class="metric-card"><div class="metric-top"><span>Endereços</span><div class="metric-icon green"><i data-icon="map-pin"></i></div></div><div class="metric-number" id="metric-addresses">04</div><div class="metric-foot"><span class="foot-dot green-dot"></span> Origens e destinos</div></div>
+        </div>
+        <div class="two-col dashboard-lower">
+          <div class="surface"><div class="card-header"><div><h2>Fretes recentes</h2><p>Últimas movimentações cadastradas</p></div><button class="text-btn" data-goto="fretes">Ver todos <i data-icon="arrow-right"></i></button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>CÓDIGO</th><th>ROTA</th><th>TRANSPORTADOR</th><th>DATA</th><th>STATUS</th></tr></thead><tbody id="dashboard-fretes"></tbody></table></div></div>
+          <div class="surface operation-card"><div class="card-header"><div><h2>Comece por aqui</h2><p>Fluxo simplificado da operação</p></div></div><div class="steps"><div class="step"><span class="step-number">01</span><div><strong>Cadastre os dados</strong><p>Produtos, endereços e transportadores</p></div><span class="step-check"><i data-icon="check"></i></span></div><div class="step"><span class="step-number">02</span><div><strong>Crie um frete</strong><p>Defina rota, responsável e produtos</p></div><span class="step-arrow"><i data-icon="arrow-right"></i></span></div><div class="step"><span class="step-number">03</span><div><strong>Exporte o relatório</strong><p>Consulte os fretes por data</p></div><span class="step-arrow"><i data-icon="arrow-right"></i></span></div></div><button class="btn outline stretch" data-goto="fretes">Iniciar operação <i data-icon="arrow-right"></i></button></div>
+        </div>
+        <div class="bottom-note"><i data-icon="info"></i> Dados ilustrativos utilizados somente para apresentação do protótipo.</div>
+      </section>
+
+      <section class="screen" id="screen-produtos">
+        <div class="page-heading"><div><p class="eyebrow">CADASTROS / PRODUTOS</p><h1>Produtos</h1><p class="subheading">Organize os itens disponíveis para transporte.</p></div><button class="btn primary" id="btn-new-product"><i data-icon="plus"></i> Novo produto</button></div>
+        <div class="stat-strip"><span><i data-icon="package"></i> <strong id="products-count">5 produtos</strong> cadastrados</span><span class="strip-separator"></span><span><i data-icon="check-circle"></i> Prontos para vincular a fretes</span></div>
+        <div class="catalog-layout">
+          <div class="surface"><div class="section-head"><div><h2>Lista de produtos</h2><p>Consulte e edite seus registros</p></div><div class="searchbox"><i data-icon="search"></i><input id="search-products" placeholder="Buscar produto..." /></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>PRODUTO</th><th>PESO</th><th>VALOR UNIT.</th><th>AÇÃO</th></tr></thead><tbody id="products-table"></tbody></table></div><div class="table-foot"><span id="products-footer">Exibindo 5 de 5 produtos</span><span>Dados de demonstração</span></div></div>
+          <div class="surface form-panel"><div class="section-head"><div><span class="form-kicker"><i data-icon="file-pen-line"></i> FORMULÁRIO</span><h2 id="product-form-title">Cadastrar produto</h2><p>Preencha as informações do item.</p></div></div><form id="form-product"><input type="hidden" id="product-edit" /><label>Nome do produto <span>*</span><input id="product-name" required placeholder="Ex.: Monitor LED 24 polegadas" /></label><label>Descrição<textarea id="product-desc" rows="2" placeholder="Informações adicionais do produto"></textarea></label><div class="field-grid"><label>Peso (kg) <span>*</span><input id="product-weight" required min="0.01" step="0.01" type="number" placeholder="0,00" /></label><label>Valor (R$) <span>*</span><input id="product-value" required min="0" step="0.01" type="number" placeholder="0,00" /></label></div><div class="form-actions"><button type="button" class="btn muted" id="product-cancel">Limpar</button><button type="submit" class="btn primary"><i data-icon="save"></i> Salvar produto</button></div></form></div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-enderecos">
+        <div class="page-heading"><div><p class="eyebrow">CADASTROS / ENDEREÇOS</p><h1>Endereços</h1><p class="subheading">Cadastre os locais de coleta e entrega dos produtos.</p></div><button class="btn primary" id="btn-new-address"><i data-icon="plus"></i> Novo endereço</button></div>
+        <div class="stat-strip"><span><i data-icon="map-pin"></i> <strong id="addresses-count">4 endereços</strong> cadastrados</span><span class="strip-separator"></span><span><i data-icon="route"></i> Utilize qualquer local como origem ou destino</span></div>
+        <div class="catalog-layout">
+          <div class="surface"><div class="section-head"><div><h2>Locais cadastrados</h2><p>Endereços disponíveis para as rotas</p></div><div class="searchbox"><i data-icon="search"></i><input id="search-addresses" placeholder="Buscar endereço..." /></div></div><div id="address-list" class="entity-list"></div><div class="table-foot"><span id="addresses-footer">Exibindo 4 endereços</span><span>Origem e destino</span></div></div>
+          <div class="surface form-panel"><div class="section-head"><div><span class="form-kicker"><i data-icon="file-pen-line"></i> FORMULÁRIO</span><h2 id="address-form-title">Cadastrar endereço</h2><p>Informe os dados do local.</p></div></div><form id="form-address"><input type="hidden" id="address-edit"/><label>Identificação do local <span>*</span><input id="address-label" required placeholder="Ex.: Centro de distribuição" /></label><div class="field-grid"><label>CEP <span>*</span><input id="address-zip" required placeholder="00000-000" /></label><label>Número <span>*</span><input id="address-number" required placeholder="123" /></label></div><label>Logradouro <span>*</span><input id="address-street" required placeholder="Rua, avenida, rodovia..." /></label><div class="field-grid"><label>Cidade <span>*</span><input id="address-city" required placeholder="Cidade" /></label><label>UF <span>*</span><select id="address-state" required><option value="">Selecione</option><option>PR</option><option>SC</option><option>RS</option><option>SP</option></select></label></div><div class="form-actions"><button type="button" class="btn muted" id="address-cancel">Limpar</button><button type="submit" class="btn primary"><i data-icon="save"></i> Salvar endereço</button></div></form></div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-transportadores">
+        <div class="page-heading"><div><p class="eyebrow">CADASTROS / TRANSPORTADORES</p><h1>Transportadores</h1><p class="subheading">Gerencie os responsáveis pela movimentação de cargas.</p></div><button class="btn primary" id="btn-new-carrier"><i data-icon="plus"></i> Novo transportador</button></div>
+        <div class="stat-strip"><span><i data-icon="truck"></i> <strong id="carriers-count">3 transportadores</strong> cadastrados</span><span class="strip-separator"></span><span><i data-icon="check-circle"></i> Um transportador pode levar vários produtos</span></div>
+        <div class="catalog-layout">
+          <div class="surface"><div class="section-head"><div><h2>Transportadores cadastrados</h2><p>Selecione um registro para editar</p></div><div class="searchbox"><i data-icon="search"></i><input id="search-carriers" placeholder="Buscar transportador..." /></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>TRANSPORTADOR</th><th>DOCUMENTO</th><th>CONTATO</th><th>AÇÃO</th></tr></thead><tbody id="carriers-table"></tbody></table></div><div class="table-foot"><span id="carriers-footer">Exibindo 3 transportadores</span><span>Dados de demonstração</span></div></div>
+          <div class="surface form-panel"><div class="section-head"><div><span class="form-kicker"><i data-icon="file-pen-line"></i> FORMULÁRIO</span><h2 id="carrier-form-title">Cadastrar transportador</h2><p>Dados cadastrais e de contato.</p></div></div><form id="form-carrier"><input type="hidden" id="carrier-edit"/><label>Nome / razão social <span>*</span><input id="carrier-name" required placeholder="Ex.: Transportes Exemplo Ltda" /></label><label>CPF / CNPJ <span>*</span><input id="carrier-doc" required placeholder="00.000.000/0000-00" /></label><div class="field-grid"><label>Telefone <span>*</span><input id="carrier-phone" required placeholder="(00) 00000-0000" /></label><label>Placa do veículo<input id="carrier-plate" placeholder="ABC1D23" /></label></div><label>E-mail<input id="carrier-email" type="email" placeholder="contato@transportadora.com.br" /></label><div class="form-actions"><button type="button" class="btn muted" id="carrier-cancel">Limpar</button><button type="submit" class="btn primary"><i data-icon="save"></i> Salvar transportador</button></div></form></div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-fretes">
+        <div class="page-heading"><div><p class="eyebrow">OPERAÇÃO / FRETES</p><h1>Novo frete</h1><p class="subheading">Relacione origem, destino, transportador e os produtos da carga.</p></div><button class="btn outline" id="go-freight-report"><i data-icon="list"></i> Consultar fretes</button></div>
+        <div class="freight-workflow"><div class="workflow-item active"><span>01</span> Informações da rota</div><div class="workflow-line"></div><div class="workflow-item active"><span>02</span> Produtos da carga</div><div class="workflow-line"></div><div class="workflow-item"><span>03</span> Confirmação</div></div>
+        <div class="freight-layout"><div class="freight-form-stack">
+          <div class="surface freight-card"><div class="inner-head"><span class="round-icon"><i data-icon="map-pin"></i></span><div><h2>Dados do transporte</h2><p>Defina a rota e o responsável pela entrega.</p></div></div><div class="form-grid-2"><label>Endereço de origem <span>*</span><select id="freight-origin"></select></label><label>Endereço de destino <span>*</span><select id="freight-destination"></select></label><label>Transportador <span>*</span><select id="freight-carrier"></select></label><label>Data do frete <span>*</span><input type="date" id="freight-date" value="2026-11-12" /></label></div></div>
+          <div class="surface freight-card product-freight-card"><div class="inner-head product-head"><span class="round-icon purple"><i data-icon="package"></i></span><div><h2>Produtos da carga</h2><p>Adicione um ou mais produtos ao mesmo frete.</p></div><span class="required-label">MÍNIMO 1 PRODUTO</span></div><div class="line-header"><span>PRODUTO</span><span>QUANTIDADE</span><span>SUBTOTAL</span><span></span></div><div id="freight-items"></div><button class="add-line" id="add-freight-item"><i data-icon="plus-circle"></i> Adicionar outro produto</button></div>
+        </div><div class="freight-aside"><div class="surface summary-card"><div class="summary-title"><i data-icon="clipboard-list"></i><h2>Resumo do frete</h2></div><div class="summary-row"><span>Produtos incluídos</span><strong id="freight-item-count">2 itens</strong></div><div class="summary-row"><span>Quantidade total</span><strong id="freight-total-qty">4 unidades</strong></div><div class="summary-row"><span>Transportador</span><strong class="nowrap" id="summary-carrier">Sul Express</strong></div><div class="summary-separator"></div><div class="summary-total"><span>Valor dos produtos</span><strong id="freight-total-value">R$ 0,00</strong></div><p class="summary-footnote">Valor ilustrativo dos itens; não representa o preço do frete.</p><button class="btn primary stretch" id="generate-freight"><i data-icon="check-circle"></i> Gerar frete</button><p class="below-btn"><i data-icon="shield-check"></i> Confira os dados antes de confirmar.</p></div><div class="hint-panel"><i data-icon="lightbulb"></i><div><strong>Relacionamento 1 para muitos</strong><p>Um único frete pode incluir vários produtos, todos vinculados ao mesmo transportador.</p></div></div></div></div>
+      </section>
+
+      <section class="screen" id="screen-relatorios">
+        <div class="page-heading"><div><p class="eyebrow">CONSULTAS / RELATÓRIOS</p><h1>Relatório de fretes</h1><p class="subheading">Consulte movimentações por dia e exporte os resultados.</p></div><button class="btn primary" id="download-report"><i data-icon="download"></i> Baixar relatório CSV</button></div>
+        <div class="surface report-filter"><div class="filter-top"><div><span class="form-kicker">FILTROS DE CONSULTA</span><h2>Selecione o período</h2><p>Escolha uma data para visualizar os fretes realizados nesse dia.</p></div><div class="filter-controls"><label>Data do frete<input id="report-date" type="date" value="2026-11-12" /></label><button id="apply-report-filter" class="btn primary"><i data-icon="search"></i> Consultar</button></div></div></div>
+        <div class="report-kpis"><div class="report-kpi"><div class="report-icon"><i data-icon="route"></i></div><div><span>Fretes encontrados</span><strong id="report-freights-count">2</strong></div></div><div class="report-kpi"><div class="report-icon purple"><i data-icon="package"></i></div><div><span>Unidades transportadas</span><strong id="report-qty-count">7</strong></div></div><div class="report-kpi"><div class="report-icon green"><i data-icon="wallet"></i></div><div><span>Valor dos produtos</span><strong id="report-total-value">R$ 0,00</strong></div></div></div>
+        <div class="surface report-table"><div class="section-head"><div><h2>Fretes do dia <span class="date-chip" id="report-date-label">12/11/2026</span></h2><p>Resultados referentes à data selecionada</p></div><span class="result-count" id="report-result-tag">2 resultados</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>CÓDIGO</th><th>ORIGEM</th><th>DESTINO</th><th>TRANSPORTADOR</th><th>PRODUTOS</th><th>VALOR DOS ITENS</th></tr></thead><tbody id="report-table-body"></tbody></table></div><div class="table-foot"><span>Relatório por data • Valores ilustrativos</span><span>Exportação disponível em CSV</span></div></div>
+        <div class="bottom-note"><i data-icon="info"></i> Na implementação PHP, a exportação poderá gerar um arquivo PDF em vez de CSV.</div>
+      </section>
+    </main>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>

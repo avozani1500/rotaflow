@@ -1,0 +1,100 @@
+/* RotaFlow — protótipo front-end (dados mantidos em memória; sem PHP/banco). */
+const iconShapes={
+ 'route':'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a4 4 0 0 0 0-8h-6a4 4 0 0 1 0-8h7"/>',
+ 'layout-dashboard':'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+ 'package':'<path d="M12 2 3 7l9 5 9-5-9-5Z"/><path d="M3 7v10l9 5 9-5V7M12 12v10M7.5 4.5l9 5"/>',
+ 'map-pin':'<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+ 'truck':'<path d="M3 5h11v12H3zM14 9h4l3 4v4h-7"/><circle cx="7.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/>',
+ 'chart-bar':'<path d="M3 3v18h18M7 16v-5M12 16V7M17 16V4"/>',
+ 'info':'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7h.01"/>',
+ 'chevrons-up-down':'<path d="m7 10 5-5 5 5M7 14l5 5 5-5"/>',
+ 'chevron-right':'<path d="m9 18 6-6-6-6"/>',
+ 'plus':'<path d="M12 5v14M5 12h14"/>',
+ 'arrow-right':'<path d="M5 12h14m-6-6 6 6-6 6"/>',
+ 'check':'<path d="m4 12 5 5L20 6"/>',
+ 'check-circle':'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+ 'file-pen-line':'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M8 9h3M8 13h2M13 17l6-6 3 3-6 6-4 1z"/>',
+ 'search':'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+ 'save':'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M7 3v7h10V4M7 21v-8h10v8"/>',
+ 'plus-circle':'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+ 'clipboard-list':'<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h4"/>',
+ 'shield-check':'<path d="m12 22 7-4V6l-7-4-7 4v12l7 4Z"/><path d="m9 12 2 2 4-4"/>',
+ 'lightbulb':'<path d="M9 18h6M10 21h4M9 15a7 7 0 1 1 6 0l-1 3h-4l-1-3Z"/>',
+ 'list':'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+ 'download':'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
+ 'wallet':'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 9h18M16 14h2"/>',
+ 'trash':'<path d="M4 7h16M10 3h4M6 7l1 14h10l1-14M10 11v6M14 11v6"/>'
+};
+function icon(n){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconShapes[n]||iconShapes.info}</svg>`;}
+function hydrateIcons(root=document){root.querySelectorAll('[data-icon]').forEach(el=>{el.innerHTML=icon(el.dataset.icon)});}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
+const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const dateBR=d=>{if(!d)return '';const [y,m,day]=d.split('-');return `${day}/${m}/${y}`};
+let products=[
+ {id:1,name:'Notebook corporativo 15”',desc:'Equipamento eletrônico',weight:2.2,value:3490},
+ {id:2,name:'Monitor LED 24”',desc:'Monitor Full HD',weight:3.6,value:899.9},
+ {id:3,name:'Impressora multifuncional',desc:'Equipamento de escritório',weight:6.3,value:1250},
+ {id:4,name:'Cadeira de escritório',desc:'Mobiliário',weight:12.5,value:680},
+ {id:5,name:'Caixa de periféricos',desc:'Acessórios variados',weight:4.8,value:320}
+];
+let addresses=[
+ {id:1,label:'Centro de distribuição',zip:'80010-000',street:'Av. Central',number:'450',city:'Curitiba',state:'PR'},
+ {id:2,label:'Depósito regional',zip:'85601-000',street:'Rua das Indústrias',number:'120',city:'Francisco Beltrão',state:'PR'},
+ {id:3,label:'Unidade comercial',zip:'85810-000',street:'Rua Comercial',number:'95',city:'Cascavel',state:'PR'},
+ {id:4,label:'Ponto de coleta',zip:'87010-000',street:'Av. das Flores',number:'210',city:'Maringá',state:'PR'}
+];
+let carriers=[
+ {id:1,name:'Sul Express Logística',doc:'12.345.678/0001-90',phone:'(41) 99990-1000',plate:'ABC1D23',email:'contato@sulexpress.exemplo'},
+ {id:2,name:'TransVale Cargas',doc:'98.765.432/0001-10',phone:'(46) 99990-2000',plate:'DEF4G56',email:'contato@transvale.exemplo'},
+ {id:3,name:'Norte Sul Transportes',doc:'55.444.333/0001-22',phone:'(45) 99990-3000',plate:'HIJ7K89',email:'contato@nortesul.exemplo'}
+];
+let freights=[
+ {id:1042,date:'2026-11-12',originId:1,destId:2,carrierId:1,status:'Concluído',items:[{productId:1,qty:2},{productId:2,qty:1}]},
+ {id:1041,date:'2026-11-12',originId:3,destId:4,carrierId:2,status:'Concluído',items:[{productId:3,qty:2},{productId:5,qty:2}]},
+ {id:1040,date:'2026-11-11',originId:2,destId:1,carrierId:3,status:'Em aberto',items:[{productId:4,qty:4}]},
+ {id:1039,date:'2026-11-10',originId:4,destId:3,carrierId:1,status:'Concluído',items:[{productId:5,qty:3}]}
+];
+const getProd=id=>products.find(x=>x.id===+id);const getAddr=id=>addresses.find(x=>x.id===+id);const getCarrier=id=>carriers.find(x=>x.id===+id);
+const totalFreight=f=>f.items.reduce((sum,x)=>sum+(getProd(x.productId)?.value||0)*x.qty,0);
+const quantityFreight=f=>f.items.reduce((sum,x)=>sum+x.qty,0);
+function notify(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove('show'),3000)}
+const titles={dashboard:'Visão geral',produtos:'Produtos',enderecos:'Endereços',transportadores:'Transportadores',fretes:'Fretes',relatorios:'Relatórios'};
+function navigate(screen){document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id==='screen-'+screen));document.querySelectorAll('[data-screen]').forEach(el=>el.classList.toggle('active',el.dataset.screen===screen));document.querySelector('#page-crumb').textContent=titles[screen];document.querySelector('.nav-counter').textContent=freights.length;window.scrollTo(0,0);if(screen==='fretes')renderFreightSelects();if(screen==='relatorios')renderReports();}
+function renderDashboard(){document.querySelector('#metric-fretes').textContent=String(freights.length).padStart(2,'0');document.querySelector('#metric-products').textContent=String(products.length).padStart(2,'0');document.querySelector('#metric-carriers').textContent=String(carriers.length).padStart(2,'0');document.querySelector('#metric-addresses').textContent=String(addresses.length).padStart(2,'0');document.querySelector('#dashboard-fretes').innerHTML=[...freights].sort((a,b)=>b.id-a.id).slice(0,4).map(f=>`<tr><td><span class="freight-code">#FR-${f.id}</span></td><td>${escapeHtml(getAddr(f.originId)?.city)} → ${escapeHtml(getAddr(f.destId)?.city)}</td><td>${escapeHtml(getCarrier(f.carrierId)?.name.replace(' Logística','').replace(' Transportes',''))}</td><td>${dateBR(f.date)}</td><td><span class="status-pill ${f.status==='Em aberto'?'pending':''}">${f.status}</span></td></tr>`).join('');document.querySelector('.nav-counter').textContent=freights.length;}
+function renderProducts(){const q=(document.querySelector('#search-products').value||'').toLowerCase();const list=products.filter(p=>(p.name+' '+p.desc).toLowerCase().includes(q));document.querySelector('#products-table').innerHTML=list.map(p=>`<tr><td><span class="mini-product-icon">${icon('package')}</span><span class="cell-strong">${escapeHtml(p.name)}</span></td><td>${Number(p.weight).toLocaleString('pt-BR')} kg</td><td><span class="cell-strong">${money(p.value)}</span></td><td><button class="edit-link" onclick="editProduct(${p.id})">Editar</button></td></tr>`).join('');document.querySelector('#products-count').textContent=`${products.length} produtos`;document.querySelector('#products-footer').textContent=`Exibindo ${list.length} de ${products.length} produtos`}
+function resetProduct(){document.querySelector('#form-product').reset();document.querySelector('#product-edit').value='';document.querySelector('#product-form-title').textContent='Cadastrar produto'}
+function editProduct(id){const p=getProd(id);if(!p)return;document.querySelector('#product-edit').value=p.id;document.querySelector('#product-name').value=p.name;document.querySelector('#product-desc').value=p.desc;document.querySelector('#product-weight').value=p.weight;document.querySelector('#product-value').value=p.value;document.querySelector('#product-form-title').textContent='Editar produto'}
+function renderAddresses(){const q=(document.querySelector('#search-addresses').value||'').toLowerCase();const list=addresses.filter(a=>Object.values(a).join(' ').toLowerCase().includes(q));document.querySelector('#address-list').innerHTML=list.map(a=>`<div class="entity-row"><span class="entity-marker">${icon('map-pin')}</span><div class="entity-info"><strong>${escapeHtml(a.label)}</strong><span>${escapeHtml(a.street)}, ${escapeHtml(a.number)} • ${escapeHtml(a.city)}/${escapeHtml(a.state)} • CEP ${escapeHtml(a.zip)}</span></div><span class="location-label">${escapeHtml(a.state)}</span><button class="edit-link" onclick="editAddress(${a.id})">Editar</button></div>`).join('');document.querySelector('#addresses-count').textContent=`${addresses.length} endereços`;document.querySelector('#addresses-footer').textContent=`Exibindo ${list.length} endereços`}
+function resetAddress(){document.querySelector('#form-address').reset();document.querySelector('#address-edit').value='';document.querySelector('#address-form-title').textContent='Cadastrar endereço'}
+function editAddress(id){const a=getAddr(id);if(!a)return;document.querySelector('#address-edit').value=a.id;for(const x of ['label','zip','street','number','city','state'])document.querySelector('#address-'+x).value=a[x];document.querySelector('#address-form-title').textContent='Editar endereço'}
+function renderCarriers(){const q=(document.querySelector('#search-carriers').value||'').toLowerCase();const list=carriers.filter(c=>Object.values(c).join(' ').toLowerCase().includes(q));document.querySelector('#carriers-table').innerHTML=list.map(c=>`<tr><td><span class="mini-carrier-icon">${icon('truck')}</span><span class="cell-strong">${escapeHtml(c.name)}</span></td><td>${escapeHtml(c.doc)}</td><td>${escapeHtml(c.phone)}</td><td><button class="edit-link" onclick="editCarrier(${c.id})">Editar</button></td></tr>`).join('');document.querySelector('#carriers-count').textContent=`${carriers.length} transportadores`;document.querySelector('#carriers-footer').textContent=`Exibindo ${list.length} transportadores`}
+function resetCarrier(){document.querySelector('#form-carrier').reset();document.querySelector('#carrier-edit').value='';document.querySelector('#carrier-form-title').textContent='Cadastrar transportador'}
+function editCarrier(id){const c=getCarrier(id);if(!c)return;document.querySelector('#carrier-edit').value=c.id;for(const x of ['name','doc','phone','plate','email'])document.querySelector('#carrier-'+x).value=c[x];document.querySelector('#carrier-form-title').textContent='Editar transportador'}
+function selectOptions(list,labelFn){return `<option value="">Selecione uma opção</option>${list.map(x=>`<option value="${x.id}">${escapeHtml(labelFn(x))}</option>`).join('')}`}
+function renderFreightSelects(){const origin=document.querySelector('#freight-origin'),dest=document.querySelector('#freight-destination'),carrier=document.querySelector('#freight-carrier');const prior=[origin.value,dest.value,carrier.value];origin.innerHTML=selectOptions(addresses,a=>`${a.label} — ${a.city}/${a.state}`);dest.innerHTML=selectOptions(addresses,a=>`${a.label} — ${a.city}/${a.state}`);carrier.innerHTML=selectOptions(carriers,c=>c.name);origin.value=prior[0]||'1';dest.value=prior[1]||'2';carrier.value=prior[2]||'1';refreshFreightRows();updateFreightSummary()}
+let draftItems=[{productId:1,qty:2},{productId:2,qty:1}];
+function refreshFreightRows(){document.querySelector('#freight-items').innerHTML=draftItems.map((line,i)=>`<div class="freight-line"><select aria-label="Produto da linha ${i+1}" onchange="changeFreightProduct(${i},this.value)">${products.map(p=>`<option value="${p.id}" ${p.id===+line.productId?'selected':''}>${escapeHtml(p.name)}</option>`).join('')}</select><input aria-label="Quantidade da linha ${i+1}" type="number" min="1" step="1" value="${line.qty}" onchange="changeFreightQuantity(${i},this.value)"/><span class="line-subtotal">${money((getProd(line.productId)?.value||0)*line.qty)}</span><button aria-label="Remover linha" class="icon-button" onclick="removeFreightItem(${i})">${icon('trash')}</button></div>`).join('');updateFreightSummary()}
+function changeFreightProduct(i,id){draftItems[i].productId=+id;refreshFreightRows()}
+function changeFreightQuantity(i,qty){draftItems[i].qty=Math.max(1,Math.floor(Number(qty)||1));refreshFreightRows()}
+function removeFreightItem(i){if(draftItems.length===1){notify('O frete precisa ter pelo menos um produto.');return}draftItems.splice(i,1);refreshFreightRows()}
+function updateFreightSummary(){const sum=draftItems.reduce((s,i)=>s+(getProd(i.productId)?.value||0)*i.qty,0);const qty=draftItems.reduce((s,i)=>s+i.qty,0);document.querySelector('#freight-item-count').textContent=`${draftItems.length} ${draftItems.length===1?'item':'itens'}`;document.querySelector('#freight-total-qty').textContent=`${qty} ${qty===1?'unidade':'unidades'}`;document.querySelector('#freight-total-value').textContent=money(sum);document.querySelector('#summary-carrier').textContent=getCarrier(+document.querySelector('#freight-carrier').value)?.name||'Não selecionado'}
+let reportFilterDate='2026-11-12';
+function filteredFreights(){return freights.filter(f=>f.date===reportFilterDate).sort((a,b)=>b.id-a.id)}
+function renderReports(){const list=filteredFreights();document.querySelector('#report-date-label').textContent=dateBR(reportFilterDate);document.querySelector('#report-freights-count').textContent=list.length;document.querySelector('#report-qty-count').textContent=list.reduce((s,x)=>s+quantityFreight(x),0);document.querySelector('#report-total-value').textContent=money(list.reduce((s,x)=>s+totalFreight(x),0));document.querySelector('#report-result-tag').textContent=`${list.length} ${list.length===1?'resultado':'resultados'}`;document.querySelector('#report-table-body').innerHTML=list.length?list.map(f=>`<tr><td><span class="freight-code">#FR-${f.id}</span></td><td>${escapeHtml(getAddr(f.originId)?.city)}/${escapeHtml(getAddr(f.originId)?.state)}</td><td>${escapeHtml(getAddr(f.destId)?.city)}/${escapeHtml(getAddr(f.destId)?.state)}</td><td>${escapeHtml(getCarrier(f.carrierId)?.name)}</td><td>${quantityFreight(f)} un. / ${f.items.length} tipos</td><td><span class="cell-strong">${money(totalFreight(f))}</span></td></tr>`).join(''):`<tr><td colspan="6" style="text-align:center;padding:36px">Nenhum frete encontrado para esta data.</td></tr>`;}
+function exportCsv(){const list=filteredFreights();const rows=[['Código','Data','Origem','Destino','Transportador','Produtos','Unidades','Valor dos produtos (R$)'],...list.map(f=>[`FR-${f.id}`,dateBR(f.date),getAddr(f.originId)?.city,getAddr(f.destId)?.city,getCarrier(f.carrierId)?.name,f.items.map(i=>`${getProd(i.productId)?.name} (${i.qty})`).join('; '),quantityFreight(f),totalFreight(f).toFixed(2).replace('.',',')])];const csv='\uFEFF'+rows.map(r=>r.map(s=>'"'+String(s??'').replaceAll('"','""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`relatorio-fretes-${reportFilterDate}.csv`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);notify('Relatório demonstrativo exportado em CSV.')}
+function setup(){hydrateIcons();document.querySelectorAll('[data-screen]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.screen)));document.querySelectorAll('[data-goto]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.goto)));
+ document.querySelector('#search-products').addEventListener('input',renderProducts);document.querySelector('#search-addresses').addEventListener('input',renderAddresses);document.querySelector('#search-carriers').addEventListener('input',renderCarriers);
+ document.querySelector('#btn-new-product').addEventListener('click',()=>{resetProduct();document.querySelector('#product-name').focus()});document.querySelector('#product-cancel').addEventListener('click',resetProduct);
+ document.querySelector('#form-product').addEventListener('submit',e=>{e.preventDefault();const id=+document.querySelector('#product-edit').value;const item={id:id||Math.max(...products.map(x=>x.id),0)+1,name:document.querySelector('#product-name').value.trim(),desc:document.querySelector('#product-desc').value.trim(),weight:+document.querySelector('#product-weight').value,value:+document.querySelector('#product-value').value};if(id)products=products.map(x=>x.id===id?item:x);else products.push(item);resetProduct();renderAll();notify('Produto salvo no protótipo.');});
+ document.querySelector('#btn-new-address').addEventListener('click',()=>{resetAddress();document.querySelector('#address-label').focus()});document.querySelector('#address-cancel').addEventListener('click',resetAddress);
+ document.querySelector('#form-address').addEventListener('submit',e=>{e.preventDefault();const id=+document.querySelector('#address-edit').value;const a={id:id||Math.max(...addresses.map(x=>x.id),0)+1};for(const x of ['label','zip','street','number','city','state'])a[x]=document.querySelector('#address-'+x).value.trim();if(id)addresses=addresses.map(x=>x.id===id?a:x);else addresses.push(a);resetAddress();renderAll();notify('Endereço salvo no protótipo.');});
+ document.querySelector('#btn-new-carrier').addEventListener('click',()=>{resetCarrier();document.querySelector('#carrier-name').focus()});document.querySelector('#carrier-cancel').addEventListener('click',resetCarrier);
+ document.querySelector('#form-carrier').addEventListener('submit',e=>{e.preventDefault();const id=+document.querySelector('#carrier-edit').value;const c={id:id||Math.max(...carriers.map(x=>x.id),0)+1};for(const x of ['name','doc','phone','plate','email'])c[x]=document.querySelector('#carrier-'+x).value.trim();if(id)carriers=carriers.map(x=>x.id===id?c:x);else carriers.push(c);resetCarrier();renderAll();notify('Transportador salvo no protótipo.');});
+ document.querySelector('#add-freight-item').addEventListener('click',()=>{draftItems.push({productId:products[0].id,qty:1});refreshFreightRows();notify('Produto adicionado à carga.');});document.querySelector('#freight-carrier').addEventListener('change',updateFreightSummary);
+ document.querySelector('#generate-freight').addEventListener('click',()=>{const originId=+document.querySelector('#freight-origin').value,destId=+document.querySelector('#freight-destination').value,carrierId=+document.querySelector('#freight-carrier').value,date=document.querySelector('#freight-date').value;if(!originId||!destId||!carrierId||!date){notify('Preencha origem, destino, transportador e data.');return}if(originId===destId){notify('Origem e destino precisam ser diferentes.');return}freights.push({id:Math.max(...freights.map(x=>x.id))+1,date,originId,destId,carrierId,status:'Em aberto',items:draftItems.map(x=>({...x}))});renderAll();notify('Frete criado nesta demonstração!');document.querySelector('#report-date').value=date;reportFilterDate=date;navigate('relatorios')});
+ document.querySelector('#go-freight-report').addEventListener('click',()=>navigate('relatorios'));
+ document.querySelector('#apply-report-filter').addEventListener('click',()=>{reportFilterDate=document.querySelector('#report-date').value;renderReports()});document.querySelector('#download-report').addEventListener('click',exportCsv);
+ renderAll();}
+function renderAll(){renderProducts();renderAddresses();renderCarriers();renderDashboard();renderFreightSelects();renderReports();}
+window.editProduct=editProduct;window.editAddress=editAddress;window.editCarrier=editCarrier;window.changeFreightProduct=changeFreightProduct;window.changeFreightQuantity=changeFreightQuantity;window.removeFreightItem=removeFreightItem;window.navigate=navigate;
+document.addEventListener('DOMContentLoaded',setup);
