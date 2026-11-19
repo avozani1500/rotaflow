@@ -90,7 +90,7 @@ final class ReportExportService
         $xref = strlen($pdf);
         $pdf .= "xref\n0 " . (count($objects) + 1) . "\n0000000000 65535 f \n";
         for ($i = 1; $i <= count($objects); $i++) {
-            $pdf .= sprintf('%010d 00000 n \n', $offsets[$i]);
+            $pdf .= sprintf("%010d 00000 n \n", $offsets[$i]);
         }
         $pdf .= "trailer\n<< /Size " . (count($objects) + 1) . " /Root 1 0 R >>\nstartxref\n" . $xref . "\n%%EOF";
         return $pdf;
