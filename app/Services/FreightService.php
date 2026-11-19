@@ -23,21 +23,33 @@ final class FreightService
 
     public function save(array $data, ?int $id = null): int
     {
-        $items = [];
         $productIds = $data['produtos'] ?? [];
         $quantities = $data['quantidades'] ?? [];
-        foreach ((array) $productIds as $index => $productId) {
-            $productId = (int) $productId;
-            $quantity = (int) ($quantities[$index] ?? 0);
-            if ($productId < 1 || $quantity < 1) {
-                continue;
-            }
-            $items[$productId] = ($items[$productId] ?? 0) + $quantity;
+        if (!is_array($productIds) || !is_array($quantities) || count($productIds) !== count($quantities) || count($productIds) === 0) {
+            throw new InvalidArgumentException('Informe ao menos um produto com uma quantidade válida.');
         }
-        $items = array_map(static fn (int $quantity, int $productId): array => [
-            'produto_id' => $productId,
-            'quantidade' => $quantity,
-        ], $items, array_keys($items));
+
+        $items = [];
+        $selectedProducts = [];
+        foreach (array_values($productIds) as $index => $rawProductId) {
+            $rawQuantity = array_values($quantities)[$index] ?? null;
+            if (!is_scalar($rawProductId) || !preg_match('/^[1-9]\d*$/', (string) $rawProductId)) {
+                throw new InvalidArgumentException('Selecione produtos válidos para o frete.');
+            }
+            if (!is_scalar($rawQuantity) || !preg_match('/^[1-9]\d*$/', (string) $rawQuantity)) {
+                throw new InvalidArgumentException('Informe quantidades inteiras maiores que zero.');
+            }
+
+            $productId = (int) $rawProductId;
+            if (isset($selectedProducts[$productId])) {
+                throw new InvalidArgumentException('Não é permitido selecionar o mesmo produto mais de uma vez.');
+            }
+            $selectedProducts[$productId] = true;
+            $items[] = [
+                'produto_id' => $productId,
+                'quantidade' => (int) $rawQuantity,
+            ];
+        }
 
         $freightData = [
             'origem_id' => (int) ($data['origem_id'] ?? 0),
