@@ -22,7 +22,7 @@ final class ReportController extends Controller
         $rows = $this->freights->all($from, $to);
         render('reports/index', [
             'rows' => $rows,
-            'totals' => $this->freights->totals($from, $to),
+            'totals' => $this->freights->totalsFromRows($rows),
             'from' => $from,
             'to' => $to,
         ]);
@@ -37,7 +37,8 @@ final class ReportController extends Controller
     public function pdf(): void
     {
         [$from, $to] = $this->filters();
-        (new ReportExportService())->pdf($this->freights->all($from, $to), $this->freights->totals($from, $to));
+        $rows = $this->freights->all($from, $to);
+        (new ReportExportService())->pdf($rows, $this->freights->totalsFromRows($rows));
     }
 
     private function filters(): array

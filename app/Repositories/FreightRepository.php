@@ -118,9 +118,8 @@ final class FreightRepository extends BaseRepository
         return array_slice($this->all(null, null), 0, $limit);
     }
 
-    public function totals(?string $from = null, ?string $to = null): array
+    public function totalsFromRows(array $freights): array
     {
-        $freights = $this->all($from, $to);
         return [
             'freights' => count($freights),
             'quantity' => array_sum(array_map(static fn (array $row): int => (int) $row['quantidade_total'], $freights)),
