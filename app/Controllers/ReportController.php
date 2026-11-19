@@ -42,15 +42,45 @@ final class ReportController extends Controller
 
     private function filters(): array
     {
-        $from = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($_GET['from'] ?? '')) ? (string) $_GET['from'] : null;
-        $to = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($_GET['to'] ?? '')) ? (string) $_GET['to'] : null;
+        $fromInput = trim((string) ($_GET['from'] ?? ''));
+        $toInput = trim((string) ($_GET['to'] ?? ''));
+        $from = $this->parseDate($fromInput);
+        $to = $this->parseDate($toInput);
+
+        if ($fromInput !== '' && $from === null) {
+            flash('error', 'Informe uma data inicial válida.');
+            redirect('reports');
+        }
+        if ($toInput !== '' && $to === null) {
+            flash('error', 'Informe uma data final válida.');
+            redirect('reports');
+        }
         if (!$from && $to) {
             $from = $to;
         }
         if ($from && !$to) {
             $to = $from;
         }
+        if ($from && $to && $from > $to) {
+            flash('error', 'A data inicial não pode ser posterior à data final.');
+            redirect('reports');
+        }
         return [$from, $to];
+    }
+
+    private function parseDate(string $value): ?string
+    {
+        if ($value === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            return null;
+        }
+
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        $errors = \DateTimeImmutable::getLastErrors();
+        if ($date === false || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))) {
+            return null;
+        }
+
+        return $date->format('Y-m-d') === $value ? $value : null;
     }
 }
 
