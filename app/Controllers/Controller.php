@@ -8,15 +8,6 @@ use PDOException;
 
 abstract class Controller
 {
-    protected function postData(array $fields): array
-    {
-        $data = [];
-        foreach ($fields as $field) {
-            $data[$field] = trim((string) ($_POST[$field] ?? ''));
-        }
-        return $data;
-    }
-
     protected function persistError(\Throwable $exception, string $fallback): never
     {
         set_old($_POST);

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use PDO;
-
 final class ProductRepository extends BaseRepository
 {
     public function all(string $search = ''): array

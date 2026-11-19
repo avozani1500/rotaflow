@@ -30,11 +30,6 @@ function redirect(string $route = 'dashboard', array $query = []): never
     exit;
 }
 
-function request_method(): string
-{
-    return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-}
-
 function csrf_token(): string
 {
     if (empty($_SESSION['_csrf'])) {

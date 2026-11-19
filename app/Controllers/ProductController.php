@@ -6,7 +6,6 @@ namespace App\Controllers;
 
 use App\Models\Product;
 use App\Repositories\ProductRepository;
-use InvalidArgumentException;
 
 final class ProductController extends Controller
 {

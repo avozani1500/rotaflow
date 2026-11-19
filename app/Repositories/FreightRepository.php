@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use DateTimeImmutable;
-use PDO;
-
 final class FreightRepository extends BaseRepository
 {
     public function all(?string $from = null, ?string $to = null): array
