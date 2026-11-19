@@ -37,7 +37,7 @@ final class CarrierController extends Controller
         if ($errors) {
             set_old($_POST);
             flash('error', implode(' ', $errors));
-            redirect('carriers');
+            redirect('carriers', $this->editQuery());
         }
 
         try {
@@ -45,7 +45,7 @@ final class CarrierController extends Controller
             clear_old();
             flash('success', 'Transportador salvo com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível salvar o transportador.');
+            $this->persistError($exception, 'Não foi possível salvar o transportador.', 'carriers', $this->editQuery());
         }
         redirect('carriers');
     }
@@ -57,9 +57,15 @@ final class CarrierController extends Controller
             $this->repository->delete((int) input('id'));
             flash('success', 'Transportador excluído com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível excluir o transportador.');
+            $this->persistError($exception, 'Não foi possível excluir o transportador.', 'carriers');
         }
         redirect('carriers');
+    }
+
+    private function editQuery(): array
+    {
+        $id = (int) input('id');
+        return $id > 0 ? ['edit' => $id] : [];
     }
 }
 

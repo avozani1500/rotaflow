@@ -8,14 +8,14 @@ use PDOException;
 
 abstract class Controller
 {
-    protected function persistError(\Throwable $exception, string $fallback): never
+    protected function persistError(\Throwable $exception, string $fallback, string $route, array $query = []): never
     {
         set_old($_POST);
         $message = $exception instanceof PDOException && str_contains($exception->getMessage(), '23000')
             ? 'Não foi possível excluir ou salvar porque o registro possui relacionamentos.'
             : $fallback;
         flash('error', $message);
-        redirect($_POST['_redirect'] ?? 'dashboard');
+        redirect($route, $query);
     }
 }
 

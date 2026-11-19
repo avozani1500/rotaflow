@@ -36,7 +36,7 @@ final class ProductController extends Controller
         if ($errors) {
             set_old($_POST);
             flash('error', implode(' ', $errors));
-            redirect('products');
+            redirect('products', $this->editQuery());
         }
 
         try {
@@ -44,7 +44,7 @@ final class ProductController extends Controller
             clear_old();
             flash('success', 'Produto salvo com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível salvar o produto.');
+            $this->persistError($exception, 'Não foi possível salvar o produto.', 'products', $this->editQuery());
         }
         redirect('products');
     }
@@ -56,9 +56,15 @@ final class ProductController extends Controller
             $this->repository->delete((int) input('id'));
             flash('success', 'Produto excluído com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível excluir o produto.');
+            $this->persistError($exception, 'Não foi possível excluir o produto.', 'products');
         }
         redirect('products');
+    }
+
+    private function editQuery(): array
+    {
+        $id = (int) input('id');
+        return $id > 0 ? ['edit' => $id] : [];
     }
 }
 

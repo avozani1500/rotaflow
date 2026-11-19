@@ -40,7 +40,7 @@ final class AddressController extends Controller
         if ($errors) {
             set_old($_POST);
             flash('error', implode(' ', $errors));
-            redirect('addresses');
+            redirect('addresses', $this->editQuery());
         }
 
         try {
@@ -48,7 +48,7 @@ final class AddressController extends Controller
             clear_old();
             flash('success', 'Endereço salvo com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível salvar o endereço.');
+            $this->persistError($exception, 'Não foi possível salvar o endereço.', 'addresses', $this->editQuery());
         }
         redirect('addresses');
     }
@@ -60,9 +60,15 @@ final class AddressController extends Controller
             $this->repository->delete((int) input('id'));
             flash('success', 'Endereço excluído com sucesso.');
         } catch (\Throwable $exception) {
-            $this->persistError($exception, 'Não foi possível excluir o endereço.');
+            $this->persistError($exception, 'Não foi possível excluir o endereço.', 'addresses');
         }
         redirect('addresses');
+    }
+
+    private function editQuery(): array
+    {
+        $id = (int) input('id');
+        return $id > 0 ? ['edit' => $id] : [];
     }
 }
 
