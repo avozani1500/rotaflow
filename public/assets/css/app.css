@@ -82,3 +82,35 @@ a { color: inherit; }
 .alert { border-radius: 11px; }.empty-state { min-height: 350px; display: grid; place-content: center; }
 @media (max-width: 1200px) { .sidebar { width: 230px; flex-basis: 230px; }.main-content { padding: 28px; }.catalog-layout, .freight-layout { grid-template-columns: 1fr; }.form-panel { order: -1; }.freight-aside { order: -1; }.metrics-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 800px) { .app-shell { display: block; }.sidebar { width: 100%; min-height: auto; padding: 16px; }.brand { padding: 0 4px 17px; }.sidebar-label, .sidebar-bottom { display: none; }.nav-list { display: flex; overflow-x: auto; gap: 5px; }.nav-link { min-height: 44px; padding: 0 12px; white-space: nowrap; }.nav-counter { display: none; }.topbar { height: 62px; padding: 0 18px; }.environment, .top-divider { display: none; }.main-content { padding: 22px 16px; }.page-heading { align-items: stretch; flex-direction: column; gap: 16px; }.page-heading .btn { align-self: flex-start; }.metrics-grid, .report-kpis, .two-col { grid-template-columns: 1fr; }.filter-top, .filter-controls { align-items: stretch; flex-direction: column; }.filter-controls label { width: 100%; }.field-grid, .form-grid-2 { grid-template-columns: 1fr; }.stat-strip { align-items: flex-start; flex-direction: column; gap: 8px; padding: 13px 16px; }.strip-separator { display: none; }.section-head { align-items: stretch; flex-direction: column; }.searchbox { min-width: 0; }.freight-workflow { overflow-x: auto; }.workflow-line { min-width: 30px; }.line-header { display: none; }.freight-line { grid-template-columns: minmax(0, 1fr) 95px 85px 85px 30px; gap: 5px; }.line-weight, .line-subtotal { font-size: 11px; }.detail-route, .detail-meta { grid-template-columns: 1fr; }.detail-route > i { transform: rotate(90deg); justify-self: center; }.summary-inline { justify-content: space-between; gap: 8px; padding-inline: 0; }.top-actions { display: none; } }
+
+@media (max-width: 800px) {
+    .freight-card { padding: 18px; }
+    .product-head { flex-wrap: wrap; gap: 12px; }
+    .product-head > div { min-width: 0; flex: 1 1 190px; }
+    .required-label { margin-left: 54px; }
+    .freight-line {
+        grid-template-columns: minmax(0, 1fr) 76px 36px;
+        grid-template-areas:
+            "product quantity remove"
+            "weight subtotal subtotal";
+        gap: 7px 8px;
+        padding: 10px 0;
+        border-bottom: 1px solid #edf1f6;
+    }
+    .freight-line:last-child { border-bottom: 0; }
+    .freight-line .product-select { grid-area: product; min-width: 0; }
+    .freight-line .quantity-input { grid-area: quantity; }
+    .freight-line .line-weight { grid-area: weight; }
+    .freight-line .line-subtotal { grid-area: subtotal; text-align: right; }
+    .freight-line .remove-line { grid-area: remove; justify-self: end; }
+    .line-weight::before { content: "Peso: "; color: #9aa8bb; }
+    .line-subtotal::before { content: "Valor: "; color: #9aa8bb; font-weight: 400; }
+}
+
+@media (max-width: 480px) {
+    .page-heading .d-flex { flex-wrap: wrap; }
+    .freight-workflow { margin-inline: -2px; padding-inline: 16px; }
+    .workflow-item { font-size: 11px; }
+    .freight-aside { width: 100%; }
+    .summary-card { padding: 20px; }
+}
