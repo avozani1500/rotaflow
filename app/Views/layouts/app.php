@@ -9,8 +9,8 @@ $error = flash('error');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($title) ?> | RotaFlow</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="<?= e(asset('vendor/bootstrap/bootstrap.min.css')) ?>" rel="stylesheet">
+    <link href="<?= e(asset('vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
 </head>
 <body>
@@ -28,7 +28,7 @@ $error = flash('error');
         </main>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= e(asset('vendor/bootstrap/bootstrap.bundle.min.js')) ?>"></script>
 <script src="<?= e(asset('js/app.js')) ?>"></script>
 <?php if (!empty($pageScript)): ?><script src="<?= e(asset('js/' . $pageScript)) ?>"></script><?php endif; ?>
 </body>
