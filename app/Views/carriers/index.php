@@ -38,7 +38,7 @@ $freightCount = null;
                             <td><?= e($carrier['telefone']) ?><small class="d-block text-secondary"><?= e($carrier['email']) ?></small></td>
                             <td>
                                 <a class="edit-link" href="<?= e(url('carriers', ['edit' => $carrier['id']])) ?>#transportador-form">Editar</a>
-                                <form class="d-inline" method="post" action="<?= e(url('carriers/delete')) ?>" onsubmit="return confirm('Excluir este transportador? Fretes relacionados impedem a exclusão.');">
+                                <form class="d-inline" method="post" action="<?= e(url('carriers/delete')) ?>" data-confirm="Excluir este transportador? Fretes relacionados impedem a exclusão.">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="id" value="<?= e($carrier['id']) ?>">
                                     <button class="delete-link" type="submit"><i class="bi bi-trash"></i></button>

@@ -46,7 +46,7 @@ $freightCount = null;
                     </div>
                     <span class="location-label"><?= e($address['estado']) ?></span>
                     <a class="edit-link" href="<?= e(url('addresses', ['edit' => $address['id']])) ?>#endereco-form">Editar</a>
-                    <form method="post" action="<?= e(url('addresses/delete')) ?>" onsubmit="return confirm('Excluir este endereço? Fretes relacionados impedem a exclusão.');">
+                    <form method="post" action="<?= e(url('addresses/delete')) ?>" data-confirm="Excluir este endereço? Fretes relacionados impedem a exclusão.">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= e($address['id']) ?>">
                         <button class="delete-link" type="submit"><i class="bi bi-trash"></i></button>

@@ -9,6 +9,11 @@
             form.classList.add('was-validated');
         });
     });
+    document.querySelectorAll('form[data-confirm]').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+        });
+    });
     document.querySelectorAll('input[name="cep"]').forEach(function (input) {
         input.addEventListener('input', function () {
             const value = input.value.replace(/\D/g, '').slice(0, 8);

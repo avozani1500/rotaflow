@@ -93,5 +93,3 @@ $selectedItems = $freight['items'] ?? (is_array($oldProducts)
         <div class="hint-panel"><i class="bi bi-lightbulb"></i><div><strong>Relacionamento 1 para muitos</strong><p>Um único frete pode incluir vários produtos, todos vinculados ao mesmo transportador.</p></div></div>
     </aside>
 </form>
-
-<script>window.ROTAFLOW_PRODUCT_DATA = <?= json_encode($products, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;</script>

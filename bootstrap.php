@@ -6,11 +6,17 @@ require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/app/helpers.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    ini_set('session.use_strict_mode', '1');
+    $secureCookie = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
     session_start([
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax',
-        'use_strict_mode' => true,
+        'cookie_secure' => $secureCookie,
     ]);
+    if (empty($_SESSION['_session_initialized'])) {
+        session_regenerate_id(true);
+        $_SESSION['_session_initialized'] = true;
+    }
 }
 
 spl_autoload_register(static function (string $class): void {

@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header("Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; style-src 'self'; script-src 'self'; font-src 'self'; img-src 'self' data:");
+
 require dirname(__DIR__) . '/bootstrap.php';
 
 $route = trim((string) ($_GET['route'] ?? 'dashboard'), '/');
@@ -25,18 +30,33 @@ $routes = [
     'reports/pdf' => [App\Controllers\ReportController::class, 'pdf'],
 ];
 
+$postRoutes = [
+    'products/save', 'products/delete',
+    'addresses/save', 'addresses/delete',
+    'carriers/save', 'carriers/delete',
+    'freights/save',
+];
+
 if (!isset($routes[$route])) {
     http_response_code(404);
     exit('Página não encontrada.');
+}
+
+if (in_array($route, $postRoutes, true) && ($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+    header('Allow: POST');
+    http_response_code(405);
+    exit('Método não permitido.');
 }
 
 try {
     [$controller, $action] = $routes[$route];
     (new $controller())->$action();
 } catch (PDOException $exception) {
+    error_log('RotaFlow erro de banco na rota=' . $route . ' classe=' . get_class($exception));
     http_response_code(503);
     render('layouts/error', ['message' => 'Não foi possível conectar ao banco de dados. Importe o database/schema.sql e confira config/database.local.php.']);
 } catch (Throwable $exception) {
+    error_log('RotaFlow erro na rota=' . $route . ' classe=' . get_class($exception));
     http_response_code(500);
     render('layouts/error', ['message' => 'Ocorreu um erro inesperado. Revise os dados e tente novamente.']);
 }

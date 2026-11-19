@@ -2,7 +2,7 @@
     'use strict';
     const container = document.querySelector('#freight-items');
     if (!container) return;
-    const products = window.ROTAFLOW_PRODUCT_DATA || JSON.parse(container.dataset.products || '[]');
+    const products = JSON.parse(container.dataset.products || '[]');
     const money = value => Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     const productOptions = selected => products.map(product => `<option value="${product.id}" data-weight="${product.peso}" data-value="${product.valor}" ${Number(selected) === Number(product.id) ? 'selected' : ''}>${escapeHtml(product.nome)}</option>`).join('');
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));

@@ -30,7 +30,7 @@ $freightCount = null;
                             <td><span class="cell-strong"><?= e(money($product['valor'])) ?></span></td>
                             <td>
                                 <a class="edit-link" href="<?= e(url('products', ['edit' => $product['id']])) ?>#produto-form">Editar</a>
-                                <form class="d-inline" method="post" action="<?= e(url('products/delete')) ?>" onsubmit="return confirm('Excluir este produto? Se ele já estiver em um frete, a exclusão será bloqueada.');">
+                                <form class="d-inline" method="post" action="<?= e(url('products/delete')) ?>" data-confirm="Excluir este produto? Se ele já estiver em um frete, a exclusão será bloqueada.">
                                     <?= csrf_field() ?><input type="hidden" name="id" value="<?= e($product['id']) ?>">
                                     <button class="delete-link" type="submit" aria-label="Excluir produto"><i class="bi bi-trash"></i></button>
                                 </form>
