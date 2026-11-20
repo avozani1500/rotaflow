@@ -11,8 +11,13 @@ final class CarrierRepository extends BaseRepository
         $sql = 'SELECT * FROM transportador';
         $params = [];
         if ($search !== '') {
-            $sql .= ' WHERE nome LIKE :search OR documento LIKE :search OR telefone LIKE :search';
-            $params['search'] = '%' . $search . '%';
+            $sql .= ' WHERE nome LIKE :search_name OR documento LIKE :search_document OR telefone LIKE :search_phone';
+            $term = '%' . $search . '%';
+            $params = [
+                'search_name' => $term,
+                'search_document' => $term,
+                'search_phone' => $term,
+            ];
         }
         $sql .= ' ORDER BY nome';
         $stmt = $this->pdo->prepare($sql);

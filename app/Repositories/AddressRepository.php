@@ -11,8 +11,14 @@ final class AddressRepository extends BaseRepository
         $sql = 'SELECT * FROM endereco';
         $params = [];
         if ($search !== '') {
-            $sql .= ' WHERE identificacao LIKE :search OR logradouro LIKE :search OR cidade LIKE :search OR cep LIKE :search';
-            $params['search'] = '%' . $search . '%';
+            $sql .= ' WHERE identificacao LIKE :search_identificacao OR logradouro LIKE :search_logradouro OR cidade LIKE :search_cidade OR cep LIKE :search_cep';
+            $term = '%' . $search . '%';
+            $params = [
+                'search_identificacao' => $term,
+                'search_logradouro' => $term,
+                'search_cidade' => $term,
+                'search_cep' => $term,
+            ];
         }
         $sql .= ' ORDER BY identificacao';
         $stmt = $this->pdo->prepare($sql);
