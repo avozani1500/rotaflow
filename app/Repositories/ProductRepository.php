@@ -11,8 +11,9 @@ final class ProductRepository extends BaseRepository
         $sql = 'SELECT * FROM produto';
         $params = [];
         if ($search !== '') {
-            $sql .= ' WHERE nome LIKE :search OR descricao LIKE :search';
-            $params['search'] = '%' . $search . '%';
+            $sql .= ' WHERE nome LIKE :search_name OR descricao LIKE :search_description';
+            $params['search_name'] = '%' . $search . '%';
+            $params['search_description'] = '%' . $search . '%';
         }
         $sql .= ' ORDER BY nome';
         $stmt = $this->pdo->prepare($sql);
