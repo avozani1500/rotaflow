@@ -20,7 +20,7 @@ $freightCount = null;
             <form class="searchbox" method="get"><input type="hidden" name="route" value="products"><i class="bi bi-search"></i><input name="q" value="<?= e($search) ?>" placeholder="Buscar produto..." aria-label="Buscar produto"></form>
         </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table product-table">
                 <thead><tr><th>PRODUTO</th><th>PESO</th><th>VALOR UNIT.</th><th>AÇÃO</th></tr></thead>
                 <tbody>
                     <?php foreach ($products as $product): ?>
